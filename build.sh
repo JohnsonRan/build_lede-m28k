@@ -1,5 +1,18 @@
 #!/bin/bash -e
 
+GROUP=
+group() {
+    endgroup
+    echo "::group::  $1"
+    GROUP=1
+}
+endgroup() {
+    if [ -n "$GROUP" ]; then
+        echo "::endgroup::"
+    fi
+    GROUP=
+}
+
 mkdir -p /builder
 group "download coolsnowwolf/lede"
 git clone -b master https://github.com/coolsnowwolf/lede /builder/lede
