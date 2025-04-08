@@ -63,10 +63,10 @@ jobs:
       working-directory: /builder
       run: |
         mkdir -p rom info
-          cp -a lede/bin/targets/rockchip/armv8/*/*-sysupgrade.img.gz rom/
-          cp -a lede/bin/targets/rockchip/armv8/*/*.manifest info/manifest.txt
-          cp -a lede/bin/targets/rockchip/armv8/*/config.buildinfo info/config.buildinfo
-          cp -a lede/bin/targets/rockchip/armv8/*/sha256sums info/sha256sums.txt
+          cp -a lede/bin/targets/rockchip/armv8/*-sysupgrade.img.gz rom/
+          cp -a lede/bin/targets/rockchip/armv8/*.manifest info/manifest.txt
+          cp -a lede/bin/targets/rockchip/armv8/config.buildinfo info/config.buildinfo
+          cp -a lede/bin/targets/rockchip/armv8/sha256sums info/sha256sums.txt
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
