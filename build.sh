@@ -13,15 +13,20 @@ endgroup() {
     GROUP=
 }
 
-mkdir -p /builder
+if [ "$(whoami)" = "runner" ]; then
+    BUILD_DIR="/builder"
+    mkdir -p $BUILD_DIR
+else
+    BUILD_DIR=$(pwd)
+fi
+
 group "download coolsnowwolf/lede"
-git clone -b master --depth=1 https://github.com/JohnsonRan/lede-m28k /builder/lede
-cd /builder/lede
-git reset --hard 8c11125e5e49b66b250ba6f229b12cfc911da87c
+git clone -b master --depth=1 https://github.com/JohnsonRan/lede-m28k $BUILD_DIR/lede
+cd $BUILD_DIR/lede
 endgroup
 
 group "custom package"
-curl -skL https://github.com/JohnsonRan/lede-m28k/raw/main/openwrt/scripts/99-custom.sh | bash
+curl -skL https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/scripts/99-custom.sh | bash
 endgroup
 
 group "update feed"
@@ -30,6 +35,6 @@ group "update feed"
 endgroup
 
 echo "build lede-m28k"
-curl -skL https://github.com/JohnsonRan/lede-m28k/raw/main/openwrt/m28k.config > .config
+curl -skL https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/m28k.config > .config
 make defconfig
 make -j$(nproc)
