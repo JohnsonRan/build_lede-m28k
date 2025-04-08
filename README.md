@@ -1,5 +1,5 @@
 this is cranky like shit  
 with: 
-- GCC-14
+- GCC-15
 - MOLD
 - LTO
