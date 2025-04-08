@@ -18,9 +18,10 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Setup variables
+      id: vars
       run: |
         sudo timedatectl set-timezone 'Asia/Shanghai'
-        echo "date=$(date '+%Y%m%d')" >> $GITHUB_ENV
+        echo date="$(date '+%Y%m%d')" >> $GITHUB_OUTPUT
 
     - name: Free disk space
       uses: sbwml/actions@free-disk
@@ -76,12 +77,12 @@ jobs:
 
     - name: Create release
       continue-on-error: true
-      uses: ncipollo/release-action@v1.14.0
+      uses: ncipollo/release-action@v1.16.0
       with:
-        name: ${{ env.date }}
+        name: ${{ steps.vars.outputs.date }}
         allowUpdates: true
-        tag: ${{ env.date }}
-        commit: master
+        tag: ${{ steps.vars.outputs.date }}
+        commit: main
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
         artifacts: "/builder/rom/*,/builder/info/*"
