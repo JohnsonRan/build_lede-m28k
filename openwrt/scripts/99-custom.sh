@@ -8,30 +8,45 @@ git clone https://github.com/asvow/luci-app-tailscale package/new/luci-app-tails
 git clone https://github.com/JohnsonRan/InfinityDuck package/new/duck --depth=1
 rm -rf package/feeds/packages/v2ray-geodata
 git clone https://github.com/JohnsonRan/packages_net_v2ray-geodata package/new/v2ray-geodata --depth=1
+# curl
 rm -rf feeds/packages/net/curl
 git clone https://github.com/sbwml/feeds_packages_net_curl package/new/curl
-git clone https://github.com/sbwml/package_kernel_tcp-brutal package/new/brutal
 git clone https://github.com/sbwml/package_libs_ngtcp2 package/new/ngtcp2
 git clone https://github.com/sbwml/package_libs_nghttp3 package/new/nghttp3
+# tcp-brutal
+git clone https://github.com/sbwml/package_kernel_tcp-brutal package/new/brutal
+# latest golang version
 rm -rf feeds/packages/lang/golang/golang
 git clone https://github.com/JohnsonRan/packages_lang_golang feeds/packages/lang/golang/golang
-    
+
 # sysupgrade keep files
 mkdir -p files/etc
 echo "/etc/hotplug.d/iface/*.sh" >>files/etc/sysupgrade.conf
 echo "/etc/nikki/run/cache.db" >>files/etc/sysupgrade.conf
-
-# make sure mihomo is always latest
-git clone -b Alpha --depth=1 https://github.com/metacubex/mihomo --depth=1
-mihomo_sha=$(git -C mihomo rev-parse HEAD)
-mihomo_short_sha=$(git -C mihomo rev-parse --short HEAD)
-git -C mihomo config tar.xz.command "xz -c"
-git -C mihomo archive --output=mihomo.tar.xz HEAD
-mihomo_checksum=$(sha256sum mihomo/mihomo.tar.xz | cut -d ' ' -f 1)
-sed -i "s/PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=$(date -u -d yesterday -I)/" package/new/nikki/nikki/Makefile
-sed -i "s/PKG_SOURCE_VERSION:=.*/PKG_SOURCE_VERSION:=$mihomo_sha/" package/new/nikki/nikki/Makefile
-sed -i "s/PKG_MIRROR_HASH:=.*/PKG_MIRROR_HASH:=$mihomo_checksum/" package/new/nikki/nikki/Makefile
-sed -i "s/PKG_BUILD_VERSION:=.*/PKG_BUILD_VERSION:=alpha-$mihomo_short_sha/" package/new/nikki/nikki/Makefile
+git clone https://github.com/morytyann/OpenWrt-nikki package/new/openwrt-nikki --depth=1
+mkdir -p files/etc/opkg/keys
+curl -skL https://github.com/nikkinikki-org/OpenWrt-nikki/raw/gh-pages/key-build.pub >files/etc/opkg/keys/ab017c88aab7a08b
+echo "src/gz nikki https://nikkinikki.pages.dev/openwrt-24.10/$arch/nikki" >>files/etc/opkg/customfeeds.conf
+mkdir -p files/etc/nikki/run/ui
+curl -skLo files/etc/nikki/run/Country.mmdb https://github.com/NobyDa/geoip/raw/release/Private-GeoIP-CN.mmdb
+curl -skLo files/etc/nikki/run/GeoIP.dat https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat
+curl -skLo files/etc/nikki/run/GeoSite.dat https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat
+curl -skLo gh-pages.zip https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip
+unzip gh-pages.zip
+mv zashboard-gh-pages files/etc/nikki/run/ui/zashboard
+rm -rf gh-pages.zip
+# make sure nikki is always latest
+git clone -b Alpha --depth=1 https://github.com/metacubex/mihomo --depth=1 nikki
+nikki_sha=$(git -C nikki rev-parse HEAD)
+nikki_short_sha=$(git -C nikki rev-parse --short HEAD)
+git -C nikki config tar.xz.command "xz -c"
+git -C nikki archive --output=nikki.tar.xz HEAD
+nikki_checksum=$(sha256sum nikki/nikki.tar.xz | cut -d ' ' -f 1)
+sed -i "s/PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=$(git -C nikki log -n 1 --format=%cs)/" package/new/openwrt-nikki/nikki/Makefile
+sed -i "s/PKG_SOURCE_VERSION:=.*/PKG_SOURCE_VERSION:=$nikki_sha/" package/new/openwrt-nikki/nikki/Makefile
+sed -i "s/PKG_MIRROR_HASH:=.*/PKG_MIRROR_HASH:=$nikki_checksum/" package/new/openwrt-nikki/nikki/Makefile
+sed -i "s/PKG_BUILD_VERSION:=.*/PKG_BUILD_VERSION:=alpha-$nikki_short_sha/" package/new/openwrt-nikki/nikki/Makefile
+rm -rf nikki
 
 # configure tailscale
 #sed -i "s/$(INSTALL_DATA) ./files//tailscale.conf $(1)/etc/config/tailscale//g" package/feeds/packages/tailscale/Makefile
@@ -56,3 +71,7 @@ chmod +x files/usr/bin/ue-ddns
 mkdir -p files/etc/uci-defaults
 curl -skLo files/etc/uci-defaults/99-zram https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/uci-defaults/99-zram
 curl -skLo files/etc/uci-defaults/99-kmod https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/uci-defaults/99-kmod
+
+# custom feed
+curl -skL https://opkg.ihtw.moe/key-build.pub >files/etc/opkg/keys/351925c1f1557850
+echo "src/gz infsubs https://opkg.ihtw.moe/openwrt-24.10/$arch/InfinitySubstance" >>files/etc/opkg/customfeeds.conf
