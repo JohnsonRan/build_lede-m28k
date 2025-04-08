@@ -20,6 +20,8 @@ else
     BUILD_DIR=$(pwd)
 fi
 
+mirror=https://raw.githubusercontent.com/JohnsonRan/opwrt_build_script/master
+
 group "fetch coolsnowwolf/lede"
 git clone -b master --depth=1 https://github.com/JohnsonRan/lede-m28k $BUILD_DIR/lede
 cd $BUILD_DIR/lede
@@ -46,7 +48,7 @@ curl -s $mirror/openwrt/patch/openwrt-6.x/gcc-15/elfutils/901-backends-fix-strin
 # lsof
 sed -i '/CONFIGURE_ARGS/i TARGET_CFLAGS += -std=gnu17\n' feeds/packages/utils/lsof/Makefile
 # ppp
-sed -i '/CONFIGURE_VARS/i \\nTARGET_CFLAGS += -std=gnu17\n' package/network/services/ppp/Makefile
+sed -i '/CONFIGURE_ARGS/i \\nTARGET_CFLAGS += -std=gnu17\n' package/network/services/ppp/Makefile
 # mtd
 sed -i '/target=/i TARGET_CFLAGS += -std=gnu17\n' package/system/mtd/Makefile
 # dnsmasq
