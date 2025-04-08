@@ -1,0 +1,2 @@
+sed -i '/openwrt_core/d' /etc/opkg/distfeeds.conf
+sed -i "\$a\src/gz openwrt_core https://raw.ihtw.moe/raw.githubusercontent.com/sbwml/openwrt_core/aarch64_generic/$(grep Version /usr/lib/opkg/info/kernel.control | awk '{print $2}')" /etc/opkg/distfeeds.conf

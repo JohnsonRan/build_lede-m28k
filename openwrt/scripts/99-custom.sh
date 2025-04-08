@@ -37,7 +37,7 @@ sed -i "s/PKG_BUILD_VERSION:=.*/PKG_BUILD_VERSION:=alpha-$mihomo_short_sha/" pac
 #sed -i "s/$(INSTALL_DATA) ./files//tailscale.conf $(1)/etc/config/tailscale//g" package/feeds/packages/tailscale/Makefile
 #sed -i "s/$(INSTALL_BIN) ./files//tailscale.init $(1)/etc/init.d/tailscale//g" package/feeds/packages/tailscale/Makefile
 mkdir -p files/etc/hotplug.d/iface
-curl -skLo files/etc/hotplug.d/iface/99-tailscale-needs https://github.com/JohnsonRan/stuff/raw/main/openwrt/files/etc/hotplug.d/iface/99-tailscale-needs
+curl -skLo files/etc/hotplug.d/iface/99-tailscale-needs https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/hotplug.d/iface/99-tailscale-needs
 # make sure tailscale is always latest
 ts_version=$(curl -s https://api.github.com/repos/tailscale/tailscale/releases/latest | grep -oP '(?<="tag_name": ")[^"]*' | sed 's/^v//')
 ts_tarball="tailscale-${ts_version}.tar.gz"
@@ -54,4 +54,5 @@ chmod +x files/usr/bin/ue-ddns
 
 # defaults
 mkdir -p files/etc/uci-defaults
-curl -skLo files/etc/uci-defaults/99-zram https://github.com/JohnsonRan/stuff/raw/main/openwrt/files/etc/uci-defaults/99-zram
+curl -skLo files/etc/uci-defaults/99-zram https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/uci-defaults/99-zram
+curl -skLo files/etc/uci-defaults/99-kmod https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/uci-defaults/99-kmod

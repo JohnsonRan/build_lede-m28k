@@ -1,0 +1,5 @@
+mem_total=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+zram_size=$(echo | awk "{print int($mem_total*0.25/1024)}")
+uci set system.@system[0].zram_size_mb="$zram_size"
+uci set system.@system[0].zram_comp_algo='zstd'
+uci commit system
