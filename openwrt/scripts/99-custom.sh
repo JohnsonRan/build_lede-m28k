@@ -26,7 +26,7 @@ echo "/etc/nikki/run/cache.db" >>files/etc/sysupgrade.conf
 git clone https://github.com/morytyann/OpenWrt-nikki package/new/openwrt-nikki --depth=1
 mkdir -p files/etc/opkg/keys
 curl -skL https://github.com/nikkinikki-org/OpenWrt-nikki/raw/gh-pages/key-build.pub >files/etc/opkg/keys/ab017c88aab7a08b
-echo "src/gz nikki https://nikkinikki.pages.dev/openwrt-24.10/$arch/nikki" >>files/etc/opkg/customfeeds.conf
+echo "src/gz nikki https://nikkinikki.pages.dev/openwrt-24.10/aarch64_generic/nikki" >>files/etc/opkg/customfeeds.conf
 mkdir -p files/etc/nikki/run/ui
 curl -skLo files/etc/nikki/run/Country.mmdb https://github.com/NobyDa/geoip/raw/release/Private-GeoIP-CN.mmdb
 curl -skLo files/etc/nikki/run/GeoIP.dat https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat
@@ -70,8 +70,11 @@ chmod +x files/usr/bin/ue-ddns
 # defaults
 mkdir -p files/etc/uci-defaults
 curl -skLo files/etc/uci-defaults/99-zram https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/uci-defaults/99-zram
-curl -skLo files/etc/uci-defaults/99-kmod https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/uci-defaults/99-kmod
+curl -skLo files/etc/uci-defaults/99-opkg https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/uci-defaults/99-opkg
 
 # custom feed
 curl -skL https://opkg.ihtw.moe/key-build.pub >files/etc/opkg/keys/351925c1f1557850
-echo "src/gz infsubs https://opkg.ihtw.moe/openwrt-24.10/$arch/InfinitySubstance" >>files/etc/opkg/customfeeds.conf
+echo "src/gz infsubs https://opkg.ihtw.moe/openwrt-24.10/aarch64_generic/InfinitySubstance" >>files/etc/opkg/customfeeds.conf
+
+# default LAN IP
+sed -i "s/192.168.1.1/172.20.10.1/g" package/base-files/files/bin/config_generate
