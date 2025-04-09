@@ -58,7 +58,7 @@ sed -i "/-openwrt/iOPENSSL_OPTIONS += enable-ktls '-DDEVRANDOM=\"\\\\\"/dev/uran
 # sbwml/openwrt_pkgs
 rm -rf package/{qat,qca,wwan}
 git clone https://github.com/sbwml/openwrt_pkgs package/new/custom --depth=1
-find package/new/custom -mindepth 1 -maxdepth 1 -not -name "bash-completion" -exec rm -rf {} +
+find package/new/custom -mindepth 1 -maxdepth 1 -not -name "bash-completion" -not -name "luci-app-diskman" -exec rm -rf {} +
 endgroup
 
 group "add gcc-15 support"
