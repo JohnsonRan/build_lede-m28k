@@ -77,4 +77,4 @@ curl -skL https://opkg.ihtw.moe/key-build.pub >files/etc/opkg/keys/351925c1f1557
 echo "src/gz infsubs https://opkg.ihtw.moe/openwrt-24.10/aarch64_generic/InfinitySubstance" >>files/etc/opkg/customfeeds.conf
 
 # default LAN IP
-sed -i "s/192.168.1.1/172.20.10.1/g" package/base-files/files/bin/config_generate
+sed -i "s/192.168.1.1/172.20.10.1/g" package/base-files/luci2/bin/config_generate
