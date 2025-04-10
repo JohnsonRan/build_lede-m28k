@@ -2,6 +2,15 @@ name: Build OpenWrt
 
 on:
   workflow_dispatch:
+    inputs:
+      nocache:
+        description: 'Skip Ccache'
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
 
 jobs:
   build:
@@ -48,17 +57,26 @@ jobs:
         uname -a
         echo
 
-    - name: Compile OpenWrt
+    - name: Fetch OpenWrt
       working-directory: /builder
       continue-on-error: true
       run: |
+        CCACHE=${{ github.event.inputs.nocache }}
         curl -skL https://github.com/JohnsonRan/build_lede-m28k/raw/main/build.sh | bash
 
-    - name: Extensive logs after a failed compilation
+    - name: OpenWrt CCache
+      uses: stupidloud/cachewrtbuild@main
+      with:
+        ccache: 'true'
+        mixkey: 'm28k'
+        clean: ${{ github.event.inputs.nocache }}
+        prefix: /builder/lede
+
+    - name: Compile OpenWrt
       working-directory: /builder
       run: |
         cd lede
-        make V=s
+        make -j$(nproc) || make V=s
 
     - name: Prepare Firmware Files
       working-directory: /builder
