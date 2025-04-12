@@ -52,6 +52,13 @@ sed -i "/-openwrt/iOPENSSL_OPTIONS += enable-ktls '-DDEVRANDOM=\"\\\\\"/dev/uran
 rm -rf package/{qat,qca,wwan}
 git clone https://github.com/sbwml/openwrt_pkgs package/new/custom --depth=1
 find package/new/custom -mindepth 1 -maxdepth 1 -not -name "bash-completion" -not -name "luci-app-diskman" -exec rm -rf {} +
+# sbwml/autocore-arm
+rm -rf package/lean
+git clone https://github.com/sbwml/autocore-arm package/new/autocore-arm --depth=1
+# imm cpufreq
+git clone https://github.com/immortalwrt/immortalwrt --depth=1
+cp -r immortalwrt/package/emortal/cpufreq package/new/cpufreq
+rm -rf immortalwrt
 endgroup
 
 group "add gcc-15 support"
