@@ -1,0 +1,46 @@
+sed -i 's,downloads.openwrt.org,mirror.sjtu.edu.cn/openwrt,g' /etc/opkg/distfeeds.conf
+
+uci -q batch <<-EOF
+	#hostname
+    set system.@system[0].hostname='MangoPi-M28K'
+
+	# timezone
+	set system.@system[0].timezone='CST-8'
+	set system.@system[0].zonename='Asia/Shanghai'
+
+	#ntp
+	delete system.ntp.server
+	add_list system.ntp.server='time.apple.com'
+	add_list system.ntp.server='ntp.aliyun.com'
+	add_list system.ntp.server='ntp.tencent.com'
+	add_list system.ntp.server='ntp.ntsc.ac.cn'
+EOF
+uci commit system
+
+# diagnostics
+if [ $(uci -q get luci.diag.ping) = "openwrt.org" ]; then
+    uci set luci.diag.dns='www.douyin.com'
+    uci set luci.diag.ping='www.douyin.com'
+    uci set luci.diag.route='www.douyin.com'
+    uci commit luci
+fi
+
+# firewall
+[ $(grep -c shortcut_fe /etc/config/firewall) -eq '0' ] && uci set firewall.@defaults[0].flow_offloading='1'
+if [ $(ifconfig -a | grep -o '^eth[^ ]*' | wc -l) -le 1 ] || [ "$OPENWRT_BOARD" = "armsr/armv8" ]; then
+    uci set firewall.@zone[1].input='ACCEPT'
+fi
+uci set firewall.@defaults[0].input='ACCEPT'
+uci commit firewall
+
+# zram
+mem_total=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+zram_size=$(echo | awk "{print int($mem_total*0.25/1024)}")
+uci set system.@system[0].zram_size_mb="$zram_size"
+uci set system.@system[0].zram_comp_algo='zstd'
+uci commit system
+
+# log level
+uci set system.@system[0].conloglevel='1'
+uci set system.@system[0].cronloglevel='9'
+uci commit system
