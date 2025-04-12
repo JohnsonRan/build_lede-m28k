@@ -99,7 +99,7 @@ endgroup
 echo "build lede-m28k"
 curl -skL https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/m28k.config >.config
 # ccache
-if [ "$CCACHE" != "true" ]; then
+if [ "$CCACHE" = "true" ]; then
     echo 'CONFIG_CCACHE=y' >> .config
 fi
 make defconfig

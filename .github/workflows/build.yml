@@ -3,22 +3,10 @@ name: Build OpenWrt
 on:
   workflow_dispatch:
     inputs:
-      nocache:
-        description: 'Skip Ccache'
-        required: true
-        default: 'false'
-        type: choice
-        options:
-          - 'false'
-          - 'true'
-      toolchain:
-        description: 'Cache toolchain'
-        required: true
-        default: 'true'
-        type: choice
-        options:
-          - 'false'
-          - 'true'
+      ccache:
+        description: 'Enable ccache (Use Cache to speed up next build)'
+        type: boolean
+        default: true
 
 jobs:
   build:
@@ -69,23 +57,36 @@ jobs:
       working-directory: /builder
       continue-on-error: true
       run: |
-        CCACHE=${{ github.event.inputs.nocache }}
+        CCACHE=${{ github.event.inputs.ccache }}
         curl -skL https://github.com/JohnsonRan/build_lede-m28k/raw/main/build.sh | bash
 
-    - name: OpenWrt CCache
-      uses: stupidloud/cachewrtbuild@main
+    - name: Restore Cached
+      uses: actions/cache/restore@v4
       with:
-        ccache: 'true'
-        mixkey: 'm28k'
-        clean: ${{ github.event.inputs.nocache }}
-        toolchain: ${{ github.event.inputs.toolchain }}
-        prefix: /builder/lede
+        path: /builder/lede/.ccache
+        key: lede-m28k-ccache
 
     - name: Compile OpenWrt
       working-directory: /builder
       run: |
         cd lede
         make -j$(nproc) || make V=s
+
+    - name: Delete Cached
+      continue-on-error: true
+      working-directory: /builder
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+      run: |
+        gh cache delete lede-m28k-ccache || true
+
+    - name: Save Cached
+      continue-on-error: true
+      uses: actions/cache/save@v4
+      with:
+        path: /builder/lede/.ccache
+        key: lede-m28k-ccache
 
     - name: Prepare Firmware Files
       working-directory: /builder
