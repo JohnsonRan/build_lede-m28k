@@ -1,3 +1,8 @@
+#!/bin/sh
+
+. /etc/os-release
+. /lib/functions/uci-defaults.sh
+
 sed -i 's,downloads.openwrt.org,mirror.sjtu.edu.cn/openwrt,g' /etc/opkg/distfeeds.conf
 
 uci -q batch <<-EOF
@@ -16,6 +21,9 @@ uci -q batch <<-EOF
 	add_list system.ntp.server='ntp.ntsc.ac.cn'
 EOF
 uci commit system
+
+# what can i say,this is LEDE
+sed -i '/check_signature/d' /etc/opkg.conf
 
 # diagnostics
 if [ $(uci -q get luci.diag.ping) = "openwrt.org" ]; then
@@ -44,3 +52,7 @@ uci commit system
 uci set system.@system[0].conloglevel='1'
 uci set system.@system[0].cronloglevel='9'
 uci commit system
+
+# install date
+echo "export const revision = 'v$(date +%Y%m%d%H%M)', branch = 'LuCI openwrt-23.05';" > /usr/share/ucode/luci/version.uc
+/etc/init.d/rpcd restart
