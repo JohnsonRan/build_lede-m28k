@@ -11,6 +11,14 @@ on:
         options:
           - 'false'
           - 'true'
+      toolchain:
+        description: 'Cache toolchain'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
 
 jobs:
   build:
@@ -70,6 +78,7 @@ jobs:
         ccache: 'true'
         mixkey: 'm28k'
         clean: ${{ github.event.inputs.nocache }}
+        toolchain: ${{ github.event.inputs.toolchain }}
         prefix: /builder/lede
 
     - name: Compile OpenWrt
