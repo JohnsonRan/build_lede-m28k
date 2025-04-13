@@ -85,6 +85,16 @@ jobs:
         find ./tmp/ -name '*' -exec touch {} \; >/dev/null 2>&1
         make -j$(nproc) toolchain/compile || make V=s
 
+    - name: Delete Cached
+      continue-on-error: true
+      working-directory: /builder
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+      run: |
+        gh cache delete lede-m28k-ccache || true
+        gh cache delete lede-m28k-toolchain || true
+
     - name: Save Toolchain Cache
       continue-on-error: true
       uses: actions/cache/save@v4
