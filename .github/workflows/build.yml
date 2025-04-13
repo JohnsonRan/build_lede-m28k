@@ -60,11 +60,41 @@ jobs:
         CCACHE=${{ github.event.inputs.ccache }}
         curl -skL https://github.com/JohnsonRan/build_lede-m28k/raw/main/build.sh | bash
 
-    - name: Restore Cached
+    - name: Restore Toolchain Cache
+      uses: actions/cache/restore@v4
+      with:
+        path: |
+         /builder/lede/build_dir
+         /builder/lede/dl
+         /builder/lede/staging_dir
+         /builder/lede/tmp
+        key: lede-m28k-toolchain
+        
+    - name: Restore Ccache
       uses: actions/cache/restore@v4
       with:
         path: /builder/lede/.ccache
         key: lede-m28k-ccache
+
+    - name: Compile Toolchain
+      working-directory: /builder
+      run: |
+        cd lede
+        mkdir bin
+        find ./staging_dir/ -name '*' -exec touch {} \; >/dev/null 2>&1
+        find ./tmp/ -name '*' -exec touch {} \; >/dev/null 2>&1
+        make -j$(nproc) toolchain/compile || make V=s
+
+    - name: Save Toolchain Cache
+      continue-on-error: true
+      uses: actions/cache/save@v4
+      with:
+        path: |
+         /builder/lede/build_dir
+         /builder/lede/dl
+         /builder/lede/staging_dir
+         /builder/lede/tmp
+        key: lede-m28k-toolchain
 
     - name: Compile OpenWrt
       working-directory: /builder
@@ -72,16 +102,7 @@ jobs:
         cd lede
         make -j$(nproc) || make V=s
 
-    - name: Delete Cached
-      continue-on-error: true
-      working-directory: /builder
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GH_REPO: ${{ github.repository }}
-      run: |
-        gh cache delete lede-m28k-ccache || true
-
-    - name: Save Cached
+    - name: Save Ccache
       continue-on-error: true
       uses: actions/cache/save@v4
       with:
