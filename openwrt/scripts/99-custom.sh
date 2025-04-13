@@ -32,7 +32,7 @@ curl -skLo files/etc/nikki/run/Country.mmdb https://github.com/NobyDa/geoip/raw/
 curl -skLo files/etc/nikki/run/GeoIP.dat https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat
 curl -skLo files/etc/nikki/run/GeoSite.dat https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat
 curl -skLo gh-pages.zip https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip
-unzip gh-pages.zip
+unzip -q gh-pages.zip
 mv zashboard-gh-pages files/etc/nikki/run/ui/zashboard
 rm -rf gh-pages.zip
 # make sure nikki is always latest

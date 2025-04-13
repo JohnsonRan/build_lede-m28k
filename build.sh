@@ -96,11 +96,12 @@ rm -rf package/network/utils/linux-atm
 git clone https://github.com/sbwml/package_network_utils_linux-atm package/network/utils/linux-atm
 endgroup
 
-echo "build lede-m28k"
+group "lede-m28k defconfig"
 curl -skL https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/m28k.config >.config
 # ccache
 if [ "$CCACHE" != "false" ]; then
     echo -e "\nCONFIG_CCACHE=y" >> .config
     echo "CONFIG_CCACHE_DIR=\"$BUILD_DIR/lede/.ccache\"" >> .config
 fi
-make defconfig
+make defconfig &>/dev/null
+endgroup
