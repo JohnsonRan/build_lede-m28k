@@ -101,5 +101,6 @@ curl -skL https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/m28k.co
 # ccache
 if [ "$CCACHE" != "false" ]; then
     echo -e "\nCONFIG_CCACHE=y" >> .config
+    echo "CONFIG_CCACHE_DIR=\"$BUILD_DIR/lede/.ccache\"" >> .config
 fi
 make defconfig
