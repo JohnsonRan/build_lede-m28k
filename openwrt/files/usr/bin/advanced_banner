@@ -19,7 +19,7 @@ HOSTNAME=$(uci get system.@system[0].hostname)
 UPTIME_SEC=$(cat /proc/uptime | awk '{print int($1)}')
 UPTIME_DAYS=$((UPTIME_SEC / 86400))
 UPTIME_HOURS=$(( (UPTIME_SEC % 86400) / 3600 ))
-UPTIME_MINUTES=$(( (UPTIME_SEC % 3600) / 60 ))
+UPTIME_MINUTES=$((UPTIME_SEC % 3600 / 60))
 
 # 格式化运行时间，只显示非零部分
 UPTIME_FORMATTED=""
@@ -44,8 +44,8 @@ DISK_TOTAL=$(df -h / | awk 'NR==2{print $2}')
 DISK_PERCENT=$(df -h / | awk 'NR==2{print $5}')
 
 # 网络接口配置
-WAN_IFACE="pppoe-wan"
-LAN_IFACE="br-lan"
+WAN_IFACE="eth1"
+LAN_IFACE="eth0"
 
 # 获取网络流量
 get_traffic() {
@@ -61,18 +61,53 @@ calc_traffic() {
     local tx_bytes=$2
     local rx_mb=$(awk "BEGIN {printf \"%.2f\", $rx_bytes/1024/1024}")
     local tx_mb=$(awk "BEGIN {printf \"%.2f\", $tx_bytes/1024/1024}")
-    echo "$rx_mb $tx_mb"
+    
+    # 根据流量大小选择适当的单位(MB、GB、TB)
+    local rx_unit="MB"
+    local tx_unit="MB"
+    
+    # 接收流量单位转换
+    if [ $(awk "BEGIN {print ($rx_mb >= 1024*1024) ? 1 : 0}") -eq 1 ]; then
+        # 转换为TB
+        rx_mb=$(awk "BEGIN {printf \"%.2f\", $rx_mb/1024/1024}")
+        rx_unit="TB"
+    elif [ $(awk "BEGIN {print ($rx_mb >= 1024) ? 1 : 0}") -eq 1 ]; then
+        # 转换为GB
+        rx_mb=$(awk "BEGIN {printf \"%.2f\", $rx_mb/1024}")
+        rx_unit="GB"
+    fi
+    
+    # 发送流量单位转换
+    if [ $(awk "BEGIN {print ($tx_mb >= 1024*1024) ? 1 : 0}") -eq 1 ]; then
+        # 转换为TB
+        tx_mb=$(awk "BEGIN {printf \"%.2f\", $tx_mb/1024/1024}")
+        tx_unit="TB"
+    elif [ $(awk "BEGIN {print ($tx_mb >= 1024) ? 1 : 0}") -eq 1 ]; then
+        # 转换为GB
+        tx_mb=$(awk "BEGIN {printf \"%.2f\", $tx_mb/1024}")
+        tx_unit="GB"
+    fi
+    
+    echo "$rx_mb $rx_unit $tx_mb $tx_unit"
 }
 
 # 获取当前流量
 WAN_TRAFFIC=$(get_traffic "$WAN_IFACE")
 LAN_TRAFFIC=$(get_traffic "$LAN_IFACE")
 
-# 转换为MB
-WAN_RX_MB=$(calc_traffic "$(echo "$WAN_TRAFFIC" | awk '{print $1}')" 0 | awk '{print $1}')
-WAN_TX_MB=$(calc_traffic 0 "$(echo "$WAN_TRAFFIC" | awk '{print $2}')" | awk '{print $2}')
-LAN_RX_MB=$(calc_traffic "$(echo "$LAN_TRAFFIC" | awk '{print $1}')" 0 | awk '{print $1}')
-LAN_TX_MB=$(calc_traffic 0 "$(echo "$LAN_TRAFFIC" | awk '{print $2}')" | awk '{print $2}')
+# 转换为适当的单位(MB或GB)
+WAN_TRAFFIC_CALC=$(calc_traffic "$(echo "$WAN_TRAFFIC" | awk '{print $1}')" "$(echo "$WAN_TRAFFIC" | awk '{print $2}')")
+LAN_TRAFFIC_CALC=$(calc_traffic "$(echo "$LAN_TRAFFIC" | awk '{print $1}')" "$(echo "$LAN_TRAFFIC" | awk '{print $2}')")
+
+WAN_RX_VALUE=$(echo "$WAN_TRAFFIC_CALC" | awk '{print $1}')
+WAN_RX_UNIT=$(echo "$WAN_TRAFFIC_CALC" | awk '{print $2}')
+WAN_TX_VALUE=$(echo "$WAN_TRAFFIC_CALC" | awk '{print $3}')
+WAN_TX_UNIT=$(echo "$WAN_TRAFFIC_CALC" | awk '{print $4}')
+
+LAN_RX_VALUE=$(echo "$LAN_TRAFFIC_CALC" | awk '{print $1}')
+LAN_RX_UNIT=$(echo "$LAN_TRAFFIC_CALC" | awk '{print $2}')
+LAN_TX_VALUE=$(echo "$LAN_TRAFFIC_CALC" | awk '{print $3}')
+LAN_TX_UNIT=$(echo "$LAN_TRAFFIC_CALC" | awk '{print $4}')
 
 # 进度条函数 (0-100)
 progress_bar() {
@@ -114,8 +149,8 @@ echo -e "${CYAN}║${NC} ${GREEN}💾 RAM:      ${NC}${MEM_USED}/${MEM_TOTAL} MB
 echo -e "${CYAN}║${NC} ${GREEN}💿 Disk:     ${NC}${DISK_USED}/${DISK_TOTAL}  ${YELLOW}$DISK_BAR${NC}"
 echo -e "${CYAN}╠══════════════════════════════════════════════════════════════╣${NC}"
 echo -e "${CYAN}║${NC} ${PURPLE}📶 Network Traffic:${NC}"
-echo -e "${CYAN}║${NC} ${BLUE}WAN (pppoe-wan):${NC}  ${GREEN}▼${NC} ${WAN_RX_MB} MB  ${GREEN}▲${NC} ${WAN_TX_MB} MB"
-echo -e "${CYAN}║${NC} ${BLUE}LAN (br-lan):${NC}    ${GREEN}▼${NC} ${LAN_RX_MB} MB  ${GREEN}▲${NC} ${LAN_TX_MB} MB"
+echo -e "${CYAN}║${NC} ${BLUE}LAN (eth0):${NC}    ${GREEN}▲${NC} ${LAN_TX_VALUE} ${LAN_TX_UNIT}  ${GREEN}▼${NC} ${LAN_RX_VALUE} ${LAN_RX_UNIT}"
+echo -e "${CYAN}║${NC} ${BLUE}WAN (eth1):${NC}  ${GREEN}▲${NC} ${WAN_TX_VALUE} ${WAN_TX_UNIT}  ${GREEN}▼${NC} ${WAN_RX_VALUE} ${WAN_RX_UNIT}"
 echo -e "${CYAN}╠══════════════════════════════════════════════════════════════╣${NC}"
 echo -e "${CYAN}║${NC} ${BLUE}📊 Top 3 Processes (by CPU):${NC}"
 echo -e "${CYAN}║${NC}${TOP_PROCESSES}"
