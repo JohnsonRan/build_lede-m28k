@@ -73,6 +73,13 @@ curl -skLo files/etc/uci-defaults/99-opkg https://github.com/JohnsonRan/build_le
 curl -skLo files/etc/uci-defaults/99-nikki https://github.com/JohnsonRan/opwrt_build_script/raw/master/openwrt/files/etc/uci-defaults/99-nikki
 curl -skLo files/etc/uci-defaults/99-dae https://github.com/JohnsonRan/opwrt_build_script/raw/master/openwrt/files/etc/uci-defaults/99-dae
 
+# advanced banner
+mkdir -p files/etc/profile.d
+curl -skLo files/etc/profile.d/advanced_banner.sh https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/profile.d/advanced_banner.sh
+curl -skLo files/etc/banner https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/banner
+curl -skLo files/usr/bin/advanced_banner https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/usr/bin/advanced_banner
+chmod +x files/usr/bin/advanced_banner
+
 # custom feed
 curl -skL https://opkg.ihtw.moe/key-build.pub >files/etc/opkg/keys/351925c1f1557850
 echo "src/gz infsubs https://opkg.ihtw.moe/openwrt-24.10/aarch64_generic/InfinitySubstance" >>files/etc/opkg/customfeeds.conf
