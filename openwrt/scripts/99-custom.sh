@@ -10,6 +10,8 @@ rm -rf package/feeds/packages/v2ray-geodata
 git clone https://github.com/JohnsonRan/packages_net_v2ray-geodata package/new/v2ray-geodata --depth=1
 # curl
 rm -rf feeds/packages/net/curl
+rm -rf package/feeds/packages/ngtcp2
+rm -rf package/feeds/packages/nghttp3
 git clone https://github.com/sbwml/feeds_packages_net_curl package/new/curl
 git clone https://github.com/sbwml/package_libs_ngtcp2 package/new/ngtcp2
 git clone https://github.com/sbwml/package_libs_nghttp3 package/new/nghttp3
