@@ -4,7 +4,6 @@
 git clone https://github.com/JohnsonRan/packages_net_speedtest-ex package/new/speedtest-ex
 git clone https://github.com/JohnsonRan/packages_utils_boltbrowser package/new/boltbrowser
 git clone https://github.com/nikkinikki-org/OpenWrt-nikki package/new/nikki --depth=1
-git clone https://github.com/asvow/luci-app-tailscale package/new/luci-app-tailscale --depth=1
 git clone https://github.com/JohnsonRan/InfinityDuck package/new/duck --depth=1
 rm -rf package/feeds/packages/v2ray-geodata
 git clone https://github.com/JohnsonRan/packages_net_v2ray-geodata package/new/v2ray-geodata --depth=1
