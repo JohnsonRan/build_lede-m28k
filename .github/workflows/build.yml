@@ -61,6 +61,7 @@ jobs:
         curl -skL https://github.com/JohnsonRan/build_lede-m28k/raw/main/build.sh | bash
 
     - name: Restore Toolchain Cache
+      if: ${{ github.event.inputs.ccache == 'true' }}
       uses: actions/cache/restore@v4
       with:
         path: |
@@ -71,6 +72,7 @@ jobs:
         key: lede-m28k-toolchain
         
     - name: Restore Ccache
+      if: ${{ github.event.inputs.ccache == 'true' }}
       uses: actions/cache/restore@v4
       with:
         path: /builder/lede/.ccache
