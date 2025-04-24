@@ -77,7 +77,7 @@ curl -skLo files/etc/uci-defaults/99-dae https://github.com/JohnsonRan/opwrt_bui
 # advanced banner
 mkdir -p files/etc/profile.d
 curl -skLo files/etc/profile.d/advanced_banner.sh https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/profile.d/advanced_banner.sh
-curl -skLo files/etc/banner https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/banner
+curl -skLo package/base-files/files/etc/banner https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/banner
 curl -skLo files/usr/bin/advanced_banner https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/usr/bin/advanced_banner
 chmod +x files/usr/bin/advanced_banner
 
