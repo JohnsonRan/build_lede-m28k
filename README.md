@@ -15,7 +15,6 @@ curl -skL https://github.com/JohnsonRan/build_lede-m28k/raw/main/build.sh | bash
 - Default LAN IP: **172.20.10.1**
 
 if you are lucky, here's some packages you got:
-- InfinityDuck
 - InfinityNikki
 - Tailscale
 - speedtest-ex
