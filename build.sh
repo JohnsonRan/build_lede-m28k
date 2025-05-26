@@ -59,6 +59,10 @@ git clone https://github.com/sbwml/autocore-arm package/new/autocore-arm --depth
 git clone https://github.com/immortalwrt/immortalwrt --depth=1
 cp -r immortalwrt/package/emortal/cpufreq package/new/cpufreq
 rm -rf immortalwrt
+# vnstat2
+git clone https://github.com/openwrt/luci --depth=1
+cp -r luci/applications/luci-app-vnstat2 package/new/vnstat2
+rm -rf luci
 endgroup
 
 group "add gcc-15 support"
