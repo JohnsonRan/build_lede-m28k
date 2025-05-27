@@ -68,6 +68,7 @@ endgroup
 group "add gcc-15 support"
 curl -skL $mirror/openwrt/patch/generic-24.10/202-toolchain-gcc-add-support-for-GCC-15.patch | patch -p1
 # fix gcc-15
+curl -skL https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/patchs/fix-GCC15.patch | patch -p1
 # Mbedtls
 sed -i '/TARGET_CFLAGS/ s/$/ -Wno-error=unterminated-string-initialization/' package/libs/mbedtls/Makefile
 # elfutils

@@ -1,0 +1,49 @@
+diff --git a/toolchain/gcc/Config.in b/toolchain/gcc/Config.in
+index 658d7869..b3267330 100644
+--- a/toolchain/gcc/Config.in
++++ b/toolchain/gcc/Config.in
+@@ -21,6 +21,9 @@ choice
+ 		
+ 	config GCC_USE_VERSION_14
+ 		bool "gcc 14.x"
++
++	config GCC_USE_VERSION_15
++		bool "gcc 15.x"
+ endchoice
+ 
+ config GCC_USE_GRAPHITE
+diff --git a/toolchain/gcc/Config.version b/toolchain/gcc/Config.version
+index a0bf08f2..78ba769e 100644
+--- a/toolchain/gcc/Config.version
++++ b/toolchain/gcc/Config.version
+@@ -15,10 +15,14 @@ config GCC_VERSION_14
+ 	default y if GCC_USE_VERSION_14
+ 	bool
+ 
++config GCC_VERSION_15
++        default y if GCC_USE_VERSION_15
++        bool
++
+ config GCC_VERSION
+ 	string
+ 	default "8.4.0"		if GCC_VERSION_8
+ 	default "11.3.0"	if GCC_VERSION_11
+ 	default "12.2.0"	if GCC_VERSION_12
+ 	default "14.3.0"	if GCC_VERSION_14
+-	default "13.3.0"
++	default "15.1.0"
+diff --git a/toolchain/gcc/common.mk b/toolchain/gcc/common.mk
+index 08b99459..e7a48849 100644
+--- a/toolchain/gcc/common.mk
++++ b/toolchain/gcc/common.mk
+@@ -49,6 +49,10 @@ ifeq ($(PKG_VERSION),14.3.0)
+   PKG_HASH:=e0dc77297625631ac8e50fa92fffefe899a4eb702592da5c32ef04e2293aca3a
+ endif
+ 
++ifeq ($(PKG_VERSION),15.1.0)
++  PKG_HASH:=e2b09ec21660f01fecffb715e0120265216943f038d0e48a9868713e54f06cea
++endif
++
+ PATCH_DIR=../patches-$(GCC_MAJOR_VERSION).x
+ 
+ BUGURL=http://bugs.openwrt.org/
