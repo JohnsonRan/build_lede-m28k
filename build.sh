@@ -63,6 +63,10 @@ rm -rf immortalwrt
 git clone https://github.com/openwrt/luci --depth=1
 cp -r luci/applications/luci-app-vnstat2 package/new/vnstat2
 rm -rf luci
+# miniupnpd 2.3.9
+rm -rf feeds/{packages/net/miniupnpd,luci/applications/luci-app-upnp}
+git clone https://git.cooluc.com/sbwml/miniupnpd feeds/packages/net/miniupnpd -b v2.3.9
+git clone https://git.cooluc.com/sbwml/luci-app-upnp feeds/luci/applications/luci-app-upnp -b openwrt-24.10
 endgroup
 
 group "add gcc-15 support"

@@ -89,3 +89,10 @@ echo "src/gz infsubs https://opkg.ihtw.moe/openwrt-24.10/aarch64_generic/Infinit
 
 # default LAN IP
 sed -i "s/192.168.1.1/172.20.10.1/g" package/base-files/luci2/bin/config_generate
+
+# fakehttp
+curl -skLo fakehttp.tar.gz https://github.com/MikeWang000000/FakeHTTP/releases/download/0.9.2/fakehttp-linux-arm64.tar.gz
+tar zxf fakehttp-linux-arm64.tar.gz
+mv fakehttp-linux-arm64/fakehttp files/usr/bin/fakehttp
+rm -rf fakehttp-linux-arm64 fakehttp.tar.gz
+chmod +x files/usr/bin/fakehttp
