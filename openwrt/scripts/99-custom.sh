@@ -96,3 +96,4 @@ tar zxf fakehttp-linux-arm64.tar.gz
 mv fakehttp-linux-arm64/fakehttp files/usr/bin/fakehttp
 rm -rf fakehttp-linux-arm64 fakehttp.tar.gz
 chmod +x files/usr/bin/fakehttp
+curl -skLo files/etc/init.d/fakehttp https://github.com/JohnsonRan/opwrt_build_script/raw/master/openwrt/files/etc/init.d/fakehttp.init

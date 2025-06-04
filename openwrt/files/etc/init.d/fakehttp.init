@@ -1,0 +1,35 @@
+#!/bin/sh /etc/rc.common
+
+START=90
+STOP=10
+
+USE_PROCD=1
+
+SERVICE_NAME="fakehttp"
+FAKEHTTP_BIN="/usr/bin/fakehttp"
+FAKEHTTP_ARGS="-h speedtest.cn -i pppoe-wan"
+FAKEHTTP_LOGFILE="/var/log/${SERVICE_NAME}.log"
+
+start_service() {
+    if [ ! -x "$FAKEHTTP_BIN" ]; then
+        echo "Error: ${FAKEHTTP_BIN} not found or not executable."
+        exit 1
+    fi
+
+    mkdir -p "$(dirname "$FAKEHTTP_LOGFILE")"
+
+    echo "Starting ${SERVICE_NAME} and logging to ${FAKEHTTP_LOGFILE}..."
+
+    procd_open_instance "${SERVICE_NAME}"
+#    procd_set_param command "/bin/sh" "-c" "${FAKEHTTP_BIN} ${FAKEHTTP_ARGS} > ${FAKEHTTP_LOGFILE} 2>&1"
+    procd_set_param command "/bin/sh" "-c" "${FAKEHTTP_BIN} ${FAKEHTTP_ARGS}
+    
+    procd_set_param nofork
+    
+    procd_close_instance
+}
+
+stop_service() {
+    # procd_kill_pids "${SERVICE_NAME}"
+    echo "Stopping ${SERVICE_NAME}..."
+}
