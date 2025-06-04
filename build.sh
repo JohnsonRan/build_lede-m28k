@@ -67,6 +67,9 @@ rm -rf luci
 rm -rf feeds/{packages/net/miniupnpd,luci/applications/luci-app-upnp}
 git clone https://git.cooluc.com/sbwml/miniupnpd feeds/packages/net/miniupnpd -b v2.3.9
 git clone https://git.cooluc.com/sbwml/luci-app-upnp feeds/luci/applications/luci-app-upnp -b openwrt-24.10
+# luci-app-sqm
+rm -rf feeds/luci/applications/luci-app-sqm
+git clone https://$gitea/sbwml/luci-app-sqm feeds/luci/applications/luci-app-sqm
 endgroup
 
 group "add gcc-15 support"
