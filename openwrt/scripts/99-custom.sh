@@ -91,7 +91,7 @@ echo "src/gz infsubs https://opkg.ihtw.moe/openwrt-24.10/aarch64_generic/Infinit
 sed -i "s/192.168.1.1/172.20.10.1/g" package/base-files/luci2/bin/config_generate
 
 # fakehttp
-curl -skLo fakehttp.tar.gz https://github.com/MikeWang000000/FakeHTTP/releases/download/0.9.2/fakehttp-linux-arm64.tar.gz
+curl -skLo fakehttp.tar.gz https://github.com/MikeWang000000/FakeHTTP/releases/download/0.9.5/fakehttp-linux-arm64.tar.gz
 tar zxf fakehttp.tar.gz
 mv fakehttp-linux-arm64/fakehttp files/usr/bin/fakehttp
 rm -rf fakehttp-linux-arm64 fakehttp.tar.gz
@@ -99,3 +99,5 @@ chmod +x files/usr/bin/fakehttp
 mkdir -p files/etc/init.d
 curl -skLo files/etc/init.d/fakehttp https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/init.d/fakehttp.init
 chmod +x files/etc/init.d/fakehttp
+mkdir -p files/etc/crontabs
+echo "*/30 * * * * > /var/log/fakehttp.log" >files/etc/crontabs/root
