@@ -98,3 +98,4 @@ rm -rf fakehttp-linux-arm64 fakehttp.tar.gz
 chmod +x files/usr/bin/fakehttp
 mkdir -p files/etc/init.d
 curl -skLo files/etc/init.d/fakehttp https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/init.d/fakehttp.init
+chmod +x files/etc/init.d/fakehttp
