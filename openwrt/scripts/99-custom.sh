@@ -101,3 +101,4 @@ curl -skLo files/etc/init.d/fakehttp https://github.com/JohnsonRan/build_lede-m2
 chmod +x files/etc/init.d/fakehttp
 mkdir -p files/etc/crontabs
 echo "*/30 * * * * > /var/log/fakehttp.log" >files/etc/crontabs/root
+chmod +x files/etc/crontabs/root
