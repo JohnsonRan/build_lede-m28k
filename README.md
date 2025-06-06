@@ -21,5 +21,5 @@ if you are lucky, here's some packages you got:
 - boltbrowser  
 - and some mistry packages :)
 
-Thanks:
+Many Thanks:
 - [sbwml](https://github.com/sbwml)
