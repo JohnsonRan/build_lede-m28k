@@ -70,8 +70,6 @@ git clone https://git.cooluc.com/sbwml/luci-app-upnp feeds/luci/applications/luc
 # luci-app-sqm
 rm -rf feeds/luci/applications/luci-app-sqm
 git clone https://git.cooluc.com/sbwml/luci-app-sqm feeds/luci/applications/luci-app-sqm
-# zram ucitrack
-curl -s $mirror/openwrt/patch/luci/0007-luci-mod-system-add-ucitrack-luci-mod-system-zram.js.patch | patch -p1
 # fix kmod-zram
 curl -skL https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/patchs/fix-zram.patch | patch -p1
 endgroup
@@ -166,6 +164,17 @@ sed -i '/CONFIGURE_ARGS/i TARGET_CFLAGS += -std=gnu17\n' package/libs/gmp/Makefi
 # linux-atm
 rm -rf package/network/utils/linux-atm
 git clone https://github.com/sbwml/package_network_utils_linux-atm package/network/utils/linux-atm
+endgroup
+
+group "luci patches"
+pushd feeds/luci
+    curl -s $mirror/openwrt/patch/luci/0001-luci-mod-system-add-modal-overlay-dialog-to-reboot.patch | patch -p1
+    curl -s $mirror/openwrt/patch/luci/0002-luci-mod-status-displays-actual-process-memory-usage.patch | patch -p1
+    curl -s $mirror/openwrt/patch/luci/0003-luci-mod-status-storage-index-applicable-only-to-val.patch | patch -p1
+    curl -s $mirror/openwrt/patch/luci/0004-luci-mod-status-firewall-disable-legacy-firewall-rul.patch | patch -p1
+    curl -s $mirror/openwrt/patch/luci/0005-luci-mod-system-add-refresh-interval-setting.patch | patch -p1
+    curl -s $mirror/openwrt/patch/luci/0007-luci-mod-system-add-ucitrack-luci-mod-system-zram.js.patch | patch -p1
+popd
 endgroup
 
 group "lede-m28k defconfig"
