@@ -70,10 +70,8 @@ mkdir -p files/usr/bin
 curl -skLo files/usr/bin/ue-ddns ddns.03k.org
 chmod +x files/usr/bin/ue-ddns
 
-# defaults
-mkdir -p files/etc/uci-defaults
-curl -skLo files/etc/uci-defaults/99-defaults https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/uci-defaults/99-defaults
-curl -skLo files/etc/uci-defaults/99-nikki https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/uci-defaults/99-nikki
+# default-settings
+git clone https://github.com/JohnsonRan/default-settings package/new/default-settings
 curl -skLo files/etc/uci-defaults/99-dae https://github.com/JohnsonRan/opwrt_build_script/raw/master/openwrt/files/etc/uci-defaults/99-dae
 
 # advanced banner
