@@ -3,7 +3,8 @@ this is a ***~~ghost vehicle~~***
 with: 
 - GCC-15
 - MOLD
-- LTO
+- CLANG LTO
+- LRNG
 
 try prebuilt:  
 https://github.com/JohnsonRan/build_lede-m28k/releases
@@ -19,6 +20,9 @@ if you are lucky, here's some packages you got:
 - Tailscale
 - speedtest-ex
 - boltbrowser  
+- vnstat2
+- UPnP
+- SQM
 - and some mistry packages :)
 
 Many Thanks:
