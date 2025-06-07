@@ -100,3 +100,9 @@ chmod +x files/etc/init.d/fakehttp
 mkdir -p files/etc/crontabs
 echo "*/30 * * * * > /var/log/fakehttp.log" >files/etc/crontabs/root
 chmod +x files/etc/crontabs/root
+
+# rootfs files
+mkdir -p files/etc/sysctl.d
+curl -so files/etc/sysctl.d/10-default.conf $mirror/openwrt/files/etc/sysctl.d/10-default.conf
+curl -so files/etc/sysctl.d/15-vm-swappiness.conf $mirror/openwrt/files/etc/sysctl.d/15-vm-swappiness.conf
+curl -so files/etc/sysctl.d/16-udp-buffer-size.conf $mirror/openwrt/files/etc/sysctl.d/16-buffer-size.conf
