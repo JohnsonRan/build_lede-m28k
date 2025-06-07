@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mirror=https://raw.githubusercontent.com/JohnsonRan/build_lede-m28k/main
+
 # extra packages
 git clone https://github.com/JohnsonRan/packages_net_speedtest-ex package/new/speedtest-ex
 git clone https://github.com/JohnsonRan/packages_utils_boltbrowser package/new/boltbrowser
@@ -55,7 +57,7 @@ rm -rf nikki
 #sed -i "s/$(INSTALL_DATA) ./files//tailscale.conf $(1)/etc/config/tailscale//g" package/feeds/packages/tailscale/Makefile
 #sed -i "s/$(INSTALL_BIN) ./files//tailscale.init $(1)/etc/init.d/tailscale//g" package/feeds/packages/tailscale/Makefile
 mkdir -p files/etc/hotplug.d/iface
-curl -skLo files/etc/hotplug.d/iface/99-tailscale-needs https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/hotplug.d/iface/99-tailscale-needs
+curl -skLo files/etc/hotplug.d/iface/99-tailscale-needs $mirror/openwrt/files/etc/hotplug.d/iface/99-tailscale-needs
 # make sure tailscale is always latest
 ts_version=$(curl -s https://api.github.com/repos/tailscale/tailscale/releases/latest | grep -oP '(?<="tag_name": ")[^"]*' | sed 's/^v//')
 ts_tarball="tailscale-${ts_version}.tar.gz"
@@ -76,9 +78,9 @@ curl -skLo files/etc/uci-defaults/99-dae https://github.com/JohnsonRan/opwrt_bui
 
 # advanced banner
 mkdir -p files/etc/profile.d
-curl -skLo files/etc/profile.d/advanced_banner.sh https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/profile.d/advanced_banner.sh
-curl -skLo package/base-files/files/etc/banner https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/banner
-curl -skLo files/usr/bin/advanced_banner https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/usr/bin/advanced_banner
+curl -skLo files/etc/profile.d/advanced_banner.sh $mirror/openwrt/files/etc/profile.d/advanced_banner.sh
+curl -skLo package/base-files/files/etc/banner $mirror/openwrt/files/etc/banner
+curl -skLo files/usr/bin/advanced_banner $mirror/openwrt/files/usr/bin/advanced_banner
 chmod +x files/usr/bin/advanced_banner
 
 # custom feed
@@ -95,7 +97,7 @@ mv fakehttp-linux-arm64/fakehttp files/usr/bin/fakehttp
 rm -rf fakehttp-linux-arm64 fakehttp.tar.gz
 chmod +x files/usr/bin/fakehttp
 mkdir -p files/etc/init.d
-curl -skLo files/etc/init.d/fakehttp https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/files/etc/init.d/fakehttp.init
+curl -skLo files/etc/init.d/fakehttp $mirror/openwrt/files/etc/init.d/fakehttp.init
 chmod +x files/etc/init.d/fakehttp
 mkdir -p files/etc/crontabs
 echo "*/30 * * * * > /var/log/fakehttp.log" >files/etc/crontabs/root
