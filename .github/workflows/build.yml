@@ -87,7 +87,8 @@ jobs:
         find ./tmp/ -name '*' -exec touch {} \; >/dev/null 2>&1
         sed -i "/CONFIG_KERNEL_CC=/d" .config
         make defconfig > /dev/null
-        make -j$(nproc) || make V=s
+        make -j$(nproc) toolchain/compile
+        make -j$(nproc) package/boot/uboot-rockchip/compile
 
     - name: Delete Cached
       continue-on-error: true
