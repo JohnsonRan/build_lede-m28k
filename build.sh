@@ -71,7 +71,7 @@ git clone https://git.cooluc.com/sbwml/luci-app-upnp feeds/luci/applications/luc
 rm -rf feeds/luci/applications/luci-app-sqm
 git clone https://git.cooluc.com/sbwml/luci-app-sqm feeds/luci/applications/luci-app-sqm
 # fix kmod-zram
-curl -skL https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/patchs/fix-zram.patch | patch -p1
+#curl -skL https://github.com/JohnsonRan/build_lede-m28k/raw/main/openwrt/patchs/fix-zram.patch | patch -p1
 endgroup
 
 group "patch fw4"
