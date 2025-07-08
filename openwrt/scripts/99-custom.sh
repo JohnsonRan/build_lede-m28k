@@ -41,17 +41,11 @@ unzip -q gh-pages.zip
 mv zashboard-gh-pages files/etc/nikki/run/ui/zashboard
 rm -rf gh-pages.zip
 # make sure nikki is always latest
-git clone -b Alpha --depth=1 https://github.com/metacubex/mihomo --depth=1 nikki
-nikki_sha=$(git -C nikki rev-parse HEAD)
-nikki_short_sha=$(git -C nikki rev-parse --short HEAD)
-git -C nikki config tar.xz.command "xz -c"
-git -C nikki archive --output=nikki.tar.xz HEAD
-nikki_checksum=$(sha256sum nikki/nikki.tar.xz | cut -d ' ' -f 1)
-sed -i "s/PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=$(git -C nikki log -n 1 --format=%cs)/" package/new/openwrt-nikki/nikki/Makefile
-sed -i "s/PKG_SOURCE_VERSION:=.*/PKG_SOURCE_VERSION:=$nikki_sha/" package/new/openwrt-nikki/nikki/Makefile
-sed -i "s/PKG_MIRROR_HASH:=.*/PKG_MIRROR_HASH:=$nikki_checksum/" package/new/openwrt-nikki/nikki/Makefile
-sed -i "s/PKG_BUILD_VERSION:=.*/PKG_BUILD_VERSION:=alpha-$nikki_short_sha/" package/new/openwrt-nikki/nikki/Makefile
-rm -rf nikki
+nikki_version=$(curl -skL https://github.com/MetaCubeX/mihomo/releases/download/Prerelease-Alpha/version.txt)
+sed -i "s/PKG_SOURCE_VERSION:=.*/PKG_SOURCE_VERSION:=Alpha/" package/new/openwrt-nikki/nikki/Makefile
+sed -i "s/PKG_MIRROR_HASH:=.*/PKG_MIRROR_HASH:=skip/" package/new/openwrt-nikki/nikki/Makefile
+sed -i "/PKG_BUILD_FLAGS/i PKG_BUILD_VERSION:=$nikki_version" package/new/openwrt-nikki/nikki/Makefile
+sed -i 's|GO_PKG_LDFLAGS_X:=$(GO_PKG)/constant.Version=$(PKG_SOURCE_VERSION)|GO_PKG_LDFLAGS_X:=$(GO_PKG)/constant.Version=$(PKG_BUILD_VERSION)|g' package/new/openwrt-nikki/nikki/Makefile
 
 # configure tailscale
 #sed -i "s/$(INSTALL_DATA) ./files//tailscale.conf $(1)/etc/config/tailscale//g" package/feeds/packages/tailscale/Makefile
@@ -89,19 +83,6 @@ echo "src/gz infsubs https://opkg.ihtw.moe/openwrt-24.10/aarch64_generic/Infinit
 
 # default LAN IP
 sed -i "s/192.168.1.1/172.20.10.1/g" package/base-files/luci2/bin/config_generate
-
-# fakehttp
-curl -skLo fakehttp.tar.gz https://github.com/MikeWang000000/FakeHTTP/releases/download/0.9.5/fakehttp-linux-arm64.tar.gz
-tar zxf fakehttp.tar.gz
-mv fakehttp-linux-arm64/fakehttp files/usr/bin/fakehttp
-rm -rf fakehttp-linux-arm64 fakehttp.tar.gz
-chmod +x files/usr/bin/fakehttp
-mkdir -p files/etc/init.d
-curl -skLo files/etc/init.d/fakehttp $mirror/openwrt/files/etc/init.d/fakehttp.init
-chmod +x files/etc/init.d/fakehttp
-mkdir -p files/etc/crontabs
-echo "*/30 * * * * > /var/log/fakehttp.log" >files/etc/crontabs/root
-chmod +x files/etc/crontabs/root
 
 # rootfs files
 mkdir -p files/etc/sysctl.d
