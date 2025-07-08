@@ -47,10 +47,10 @@ nikki_short_sha=$(git -C nikki rev-parse --short HEAD)
 git -C nikki config tar.xz.command "xz -c"
 git -C nikki archive --output=nikki.tar.xz HEAD
 nikki_checksum=$(sha256sum nikki/nikki.tar.xz | cut -d ' ' -f 1)
-sed -i "s/PKG_SOURCE_DATE:=.*/PKG_SOURCE_DATE:=$(git -C nikki log -n 1 --format=%cs)/" package/new/openwrt-nikki/nikki/Makefile
+sed -i "/^PKG_SOURCE_VERSION:=/a PKG_SOURCE_DATE:=$(git -C nikki log -n 1 --format=%cs)" package/new/openwrt-nikki/nikki/Makefile
 sed -i "s/PKG_SOURCE_VERSION:=.*/PKG_SOURCE_VERSION:=$nikki_sha/" package/new/openwrt-nikki/nikki/Makefile
 sed -i "s/PKG_MIRROR_HASH:=.*/PKG_MIRROR_HASH:=$nikki_checksum/" package/new/openwrt-nikki/nikki/Makefile
-sed -i "s/PKG_BUILD_VERSION:=.*/PKG_BUILD_VERSION:=alpha-$nikki_short_sha/" package/new/openwrt-nikki/nikki/Makefile
+sed -i "/^PKG_BUILD_TIME:=/a PKG_BUILD_VERSION:=alpha-$nikki_short_sha" package/new/openwrt-nikki/nikki/Makefile
 rm -rf nikki
 
 # configure tailscale
@@ -89,19 +89,6 @@ echo "src/gz infsubs https://opkg.ihtw.moe/openwrt-24.10/aarch64_generic/Infinit
 
 # default LAN IP
 sed -i "s/192.168.1.1/172.20.10.1/g" package/base-files/luci2/bin/config_generate
-
-# fakehttp
-curl -skLo fakehttp.tar.gz https://github.com/MikeWang000000/FakeHTTP/releases/download/0.9.5/fakehttp-linux-arm64.tar.gz
-tar zxf fakehttp.tar.gz
-mv fakehttp-linux-arm64/fakehttp files/usr/bin/fakehttp
-rm -rf fakehttp-linux-arm64 fakehttp.tar.gz
-chmod +x files/usr/bin/fakehttp
-mkdir -p files/etc/init.d
-curl -skLo files/etc/init.d/fakehttp $mirror/openwrt/files/etc/init.d/fakehttp.init
-chmod +x files/etc/init.d/fakehttp
-mkdir -p files/etc/crontabs
-echo "*/30 * * * * > /var/log/fakehttp.log" >files/etc/crontabs/root
-chmod +x files/etc/crontabs/root
 
 # rootfs files
 mkdir -p files/etc/sysctl.d
