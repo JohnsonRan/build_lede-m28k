@@ -89,3 +89,9 @@ mkdir -p files/etc/sysctl.d
 curl -so files/etc/sysctl.d/10-default.conf $mirror/openwrt/files/etc/sysctl.d/10-default.conf
 curl -so files/etc/sysctl.d/15-vm-swappiness.conf $mirror/openwrt/files/etc/sysctl.d/15-vm-swappiness.conf
 curl -so files/etc/sysctl.d/16-udp-buffer-size.conf $mirror/openwrt/files/etc/sysctl.d/16-buffer-size.conf
+
+# latest iperf3
+rm -rf feeds/packages/net/iperf3
+git clone --depth=1 -b master https://github.com/openwrt/packages openwrt-packages
+mv openwrt-packages/net/iperf3 feeds/packages/net/iperf3
+rm -rf openwrt-packages
